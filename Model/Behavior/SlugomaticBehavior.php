@@ -24,7 +24,8 @@ class SlugomaticBehavior extends ModelBehavior {
 			'separator' => '-',
 			'overwrite' => false,
 			'length' => 256,
-			'lower' => true
+			'lower' => true,
+			'strictExists' => false
 		);
 
 		$this->__settings[$model->alias] = (!empty($settings)) ? $settings + $default : $default;
@@ -43,6 +44,7 @@ class SlugomaticBehavior extends ModelBehavior {
 		$scope = (array)$this->__settings[$model->alias]['scope'];
 		$conditions = !empty($this->__settings[$model->alias]['conditions']) ? (array)$this->__settings[$model->alias]['conditions'] : array();
 		$slugfield = $this->__settings[$model->alias]['slugfield'];
+		$strictExists = $this->__settings[$model->alias]['strictExists'];
 		$hasFields = true;
 
 		foreach ($fields as $field) {
@@ -55,7 +57,12 @@ class SlugomaticBehavior extends ModelBehavior {
 			}
 		}
 
-		if ($hasFields && $model->hasField($slugfield) && ($this->__settings[$model->alias]['overwrite'] || empty($model->id))) {
+		$insert = empty( $model->id );
+		if($strictExists){
+			$insert = !$model->hasAny(array($model->primaryKey => $model->id));
+		}
+
+		if ( $hasFields && $model->hasField( $slugfield ) && ($insert || $this->__settings[ $model->alias ]['overwrite'])) {
 			$toSlug = array();
 
 			foreach ($fields as $field) {
