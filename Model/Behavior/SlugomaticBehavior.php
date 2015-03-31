@@ -58,7 +58,7 @@ class SlugomaticBehavior extends ModelBehavior {
 		}
 
 		$insert = empty( $model->id );
-		if($strictExists){
+		if($strictExists && !$this->__settings[ $model->alias ]['overwrite']){
 			$insert = !$model->hasAny(array($model->primaryKey => $model->id));
 		}
 

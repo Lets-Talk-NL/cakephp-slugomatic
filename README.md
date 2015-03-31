@@ -124,7 +124,8 @@ public $actsAs = array(
         'separator' => '-',
         'overwrite' => false,
         'length' => 256,
-        'lower' => true
+        'lower' => true,
+        'strictExists' => false
     )
 );
 ```
@@ -151,6 +152,7 @@ public $actsAs = array(
 * `lower`: When `true`, transforms the slug text to lowercase. If `false`, the
   behavior will preserve the text the way it was defined.
 * `separator`: The character used to separate words. Defaults to '-'.
+* `strictExists`: Stricter check for insert or update by querying the database.
 
 #### Additional options for deduplication
 
