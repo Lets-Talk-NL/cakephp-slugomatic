@@ -62,7 +62,13 @@ class SlugomaticBehavior extends ModelBehavior {
 			$insert = !$model->hasAny(array($model->primaryKey => $model->id));
 		}
 
-		if ( $hasFields && $model->hasField( $slugfield ) && ($insert || $this->__settings[ $model->alias ]['overwrite'])) {
+		//check if for update the slug currently is null
+		$existingIsNull = false;
+		if(!$insert){
+			$existingIsNull = ($model->field($slugfield, array($model->primaryKey => $model->id)) == null);
+		}
+
+		if ( $hasFields && $model->hasField( $slugfield ) && ($insert || $this->__settings[ $model->alias ]['overwrite'] || $existingIsNull)) {
 			$toSlug = array();
 
 			foreach ($fields as $field) {
